@@ -1,4 +1,4 @@
-const Voting = artifacts.require('./Ballot');
+const Voting = artifacts.require('./Voting');
 
 contract('Testing', (accounts)=>{
 
@@ -9,45 +9,55 @@ contract('Testing', (accounts)=>{
     })
 
     it('adding candidates',async()=>{
-        await voting.addCandidate(accounts[1],{from:accounts[0]}).then(function(results){
-            console.log('candidate added sucessfully ',results)
-        })
+        await voting.Addcandidate('Ajay',{from:accounts[0]})
 
-        await voting.addCandidate(accounts[2],{from:accounts[0]}).then(function(results){
-            console.log('candidate added sucessfully',results)
-        })
-        await voting.addCandidate(accounts[3],{from:accounts[0]}).then(function(results){
-            console.log('candidate added sucessfully',results)
-        })
-
-        await voting.totalCondidates().then(function(results){
-            console.log('total no of candidates are',results.toNumber())
-        })
+        await voting.Addcandidate('Aditya',{from:accounts[0]})
+        
+        await voting.Addcandidate('Aman',{from:accounts[0]})
         
 
     })
 
     it('adding voters',async()=>{
-        await voting.addVoter(accounts[4],{from:accounts[0]}).then(function(results){
-            console.log('Voter added sucessfully',results)
-        })
-        await voting.addVoter(accounts[5],{from:accounts[0]}).then(function(results){
-            console.log('Voter added sucessfully',results)
-        })
-        await voting.addVoter(accounts[6],{from:accounts[0]}).then(function(results){
-            console.log('Voter added sucessfully',results)
-        })
+        await voting.Addvoter(accounts[4],{from:accounts[0]})
+        
+        await voting.Addvoter(accounts[5],{from:accounts[0]})
+        
+        await voting.Addvoter(accounts[6],{from:accounts[0]})
+        await voting.Addvoter(accounts[7],{from:accounts[0]})
+        
 
-        await voting.addVoter(accounts[7],{from:accounts[0]}).then(function(results){
-            console.log('Voter added sucessfully',results)
-        })
+        await voting.Addvoter(accounts[8],{from:accounts[0]})
+        
+    })
 
-        await voting.addVoter(accounts[8],{from:accounts[0]}).then(function(results){
-            console.log('Voter added sucessfully',results)
-        })
+    it('voting',async ()=>{
+        await voting.vote(1,{from : accounts[4]})
 
-        await voting.addVoter(accounts[9],{from:accounts[0]}).then(function(results){
-            console.log('Voter added sucessfully',results)
+        await voting.vote(1,{from : accounts[5]})
+
+        await voting.vote(0,{from : accounts[6]})
+
+        await voting.vote(1,{from : accounts[7]})
+
+        await voting.vote(2,{from:accounts[8]})
+    })
+
+    it('end voting and declare results',async()=>{
+        await voting.declareWinner({from:accounts[0]}).then(function(results){
+            console.log('The winner of elections is ',results[0],' and he got ',results[1].toString(),'votes')
         })
     })
+
+    it('printing votes of all candidates',async()=>{
+        let length = await voting.totalCandidates()
+        for(let i = 0; i < length; ++i){
+            await voting.candidates(i).then(function(results){
+                console.log(results[0]," ",results[1].toString())
+            })
+        }
+    })
+
+
+
 })

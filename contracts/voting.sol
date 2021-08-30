@@ -2,52 +2,47 @@
 pragma solidity >=0.4.21 <0.9.0;
 
 contract Voting{
-    uint public totalCondidates;
-    address public owner;
 
-    constructor()public{
-        owner = msg.sender;
-        totalCondidates = 0;
+    struct Voter{
+        bool auth;
+        bool voted;
+        uint256 vote;
+    }
+    uint public totalCandidates;
+    uint electionStartingTime;
+    struct candidate{
+        string name;
+        uint256 voteCount;
     }
 
-    modifier onlyOwner(){
-        require(msg.sender == owner);
+    mapping(address => Voter) public Voters;
+    candidate [] public candidates;
+    address public admin;
+    constructor() public{
+        admin = msg.sender;
+        totalCandidates = 0;
+        electionStartingTime = block.timestamp;
+    }
+    modifier onlyOwner{
+        require(msg.sender == admin,'for this operation only admin has previlages');
         _;
     }
 
-
-    mapping(uint256 => address) candidates;
-    mapping (address=>uint256) candidatesVote;
-    mapping(address => bool) voted;
-    mapping(address=>bool) IsCandidate;
-    mapping(address=>bool) IsVoter;
-
-    function addCandidate(address _addr) onlyOwner external payable returns(bool){
-        totalCondidates++;
-        candidates[totalCondidates] = _addr;
-        candidatesVote[candidates[totalCondidates]] = 1;
-        IsCandidate[_addr] = true;
-        return true;
+    function Addvoter(address _addr)external onlyOwner{
+        Voters[_addr].auth = true;
     }
 
-    function addVoter(address _addr) onlyOwner external payable returns(bool){
-            voted[_addr] = false;
-            IsVoter[_addr] = true;
-            return true;
-        }
-}
+    function Addcandidate(string calldata _name) external onlyOwner{
+        candidates.push(candidate(_name,0));
+        totalCandidates++;
+    }
 
-contract Ballot is Voting{
-
-    function vote(uint _num)external returns(bool){
-        require(IsVoter[msg.sender] == true,'voter must be registered');
-        require(voted[msg.sender] == false,'already voted');
-        require(IsCandidate[candidates[_num]] == true,'Not a valid candidate');
-        candidatesVote[candidates[_num]]++;
-        voted[msg.sender] = true;
+    function vote(uint _num) external returns(bool){
+        require(Voters[msg.sender].auth);
+        require(!Voters[msg.sender].voted);
+        candidates[_num].voteCount += 1;
+        Voters[msg.sender].voted = true;
         return true;
-
-
     }
 
 }
