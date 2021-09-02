@@ -7,7 +7,6 @@ contract('Testing', (accounts)=>{
         voting = await Voting.deployed();
         console.log("deployed address is : %s",voting.address)
     })
-
     it('adding candidates',async()=>{
         await voting.Addcandidate('Ajay',{from:accounts[0]})
 
