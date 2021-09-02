@@ -10,6 +10,10 @@ contract Voting{
     uint electionStartingTime;
     uint public totalVotes;
 
+    //events
+    event VoterAdded(address _voter,uint _time);
+    event CandidateAdded(string name,uint _time);
+
     // structure for voters and candidates
     struct Voter{
         bool auth;
@@ -52,11 +56,13 @@ contract Voting{
     // functions to add votes and candidates
     function Addvoter(address _addr)external onlyOwner beforeElectionStart{
         Voters[_addr].auth = true;
+        emit VoterAdded(_addr, block.timestamp);
     }
     
     function Addcandidate(string calldata _name) external onlyOwner beforeElectionStart{
         candidates.push(candidate(_name,0));
         totalCandidates++;
+        emit CandidateAdded(_name, block.timestamp);
     }
 
 
