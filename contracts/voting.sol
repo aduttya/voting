@@ -38,10 +38,12 @@ contract Voting{
     }
 
     function vote(uint _num) external returns(bool){
-        require(Voters[msg.sender].auth);
-        require(!Voters[msg.sender].voted);
+        require(Voters[msg.sender].auth,'Unauthorized voter');
+        require(!Voters[msg.sender].voted,'already voted');
         candidates[_num].voteCount += 1;
         Voters[msg.sender].voted = true;
+        Voters[msg.sender].vote += 1;
+
         return true;
     }
 

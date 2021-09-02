@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "16.11.0",
     "react-dom": "16.11.0",
-    "react-scripts": "3.2.0",
+    "react-scripts": "^1.1.5",
     "web3": "1.2.2"
   },
   "scripts": {
@@ -17,8 +17,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-
-
   "browserslist": {
     "production": [
       ">0.2%",

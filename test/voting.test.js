@@ -17,7 +17,11 @@ contract('Testing', (accounts)=>{
         
 
     })
-
+    it('checking candidates',async ()=>{
+        await voting.candidates(0).then(function(results){
+            console.log(results[0],results[1].toString())
+        })
+    })
     it('adding voters',async()=>{
         await voting.Addvoter(accounts[4],{from:accounts[0]})
         
@@ -41,13 +45,11 @@ contract('Testing', (accounts)=>{
         await voting.vote(1,{from : accounts[7]})
 
         await voting.vote(2,{from:accounts[8]})
+        
+        
     })
 
-    it('end voting and declare results',async()=>{
-        await voting.declareWinner({from:accounts[0]}).then(function(results){
-            console.log('The winner of elections is ',results[0],' and he got ',results[1].toString(),'votes')
-        })
-    })
+    
 
     it('printing votes of all candidates',async()=>{
         let length = await voting.totalCandidates()
